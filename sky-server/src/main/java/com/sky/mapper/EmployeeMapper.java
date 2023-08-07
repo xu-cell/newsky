@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface EmployeeMapper {
 
+    void insertEmployee(Employee employee);
+
     /**
      * 根据用户名查询员工
      * @param username
