@@ -7,4 +7,13 @@
                              UPDATE_USER)
         VALUES (#{name}, #{username}, #{password}, #{phone}, #{sex}, #{idNumber},#{status},#{createTime}, #{updateTime}, #{updateUser}, #{createUser});
     </insert>
+    <select id="selectEmployee" resultType="com.sky.entity.Employee">
+        select * from employee
+        <where>
+            <if test="name != null and name != ''">
+                name like concat('%',#{name},'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>
