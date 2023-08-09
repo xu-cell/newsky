@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import cn.hutool.crypto.SecureUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.annotation.AutoFill;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
@@ -10,6 +11,7 @@ import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.enumeration.OperationType;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
@@ -69,18 +71,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * @Description :添加员工
      */
+
     @Override
     public void insert(EmployeeDTO employeeDto) {
 
         // 设置属性
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDto, employee);
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
         employee.setStatus(StatusConstant.ENABLE);
         // TODO:设置当前登陆员工的ID---jwt令牌解析获取id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         // 插入数据库
         employeeMapper.insertEmployee(employee);
@@ -93,10 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // TODO 调用Mapper利用分页插件获取员工信息
         PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
         List<Employee> lists = employeeMapper.selectEmployee(employeePageQueryDTO.getName());
-
         Page<Employee> pages = (Page<Employee>)lists;
-
-
         return new PageResult(pages.getTotal(),pages.getResult());
 
     }
