@@ -177,18 +177,7 @@ public class DishServiceImpl  implements DishService {
     }
 
     @Override
-    public PageResult getListByCategoryId(Integer categoryId) {
-        DishPageQueryDTO dishPageQueryDTO = new DishPageQueryDTO();
-        dishPageQueryDTO.setCategoryId(categoryId);
-        dishPageQueryDTO.setPage(1);
-        dishPageQueryDTO.setPageSize(10);
-
-        PageHelper.startPage(dishPageQueryDTO.getPage(),dishPageQueryDTO.getPageSize());
-
-        List<DishVO> dishList = dishMapper.list(dishPageQueryDTO);
-
-        Page<DishVO> page = (Page<DishVO>)dishList;
-
-        return new PageResult(page.getTotal(),page.getResult());
+    public List<Dish> getListByCategoryId(Integer categoryId) {
+        return dishMapper.selectByCategoryId(categoryId);
     }
 }

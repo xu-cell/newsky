@@ -22,4 +22,5 @@ public interface CategoryMapper {
     void insert(Category category);
 
     void delete(Long id);
+
 }

@@ -29,6 +29,10 @@ public interface DishMapper {
     void updateDish(Dish dish);
 
     Dish getInfoById(Long id);
+
+    List<Dish> selectByCategoryId(Integer categoryId);
+
+    Long selectDisabledDishId(List<Long> count);
 }
 
 

@@ -73,9 +73,9 @@ public class DishController {
     }
     @ApiOperation("根据分类id进行查询")
     @GetMapping("/list")
-    public Result<PageResult> getListByCategoryId(Integer categoryId) {
+    public Result<List<Dish>> getListByCategoryId(Integer categoryId) {
 
-        PageResult pageResult = dishService.getListByCategoryId(categoryId);
-        return Result.success(pageResult);
+        List<Dish> list =  dishService.getListByCategoryId(categoryId);
+        return Result.success(list);
     }
 }
