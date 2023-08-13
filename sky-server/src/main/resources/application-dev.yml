@@ -14,3 +14,10 @@ sky:
     endpoint: oss-cn-shanghai.aliyuncs.com
     access-key-secret: aud7QHRX1S312jS3r1bzNzf0f7XYkH
     bucket-name: sky-out-project
+
+
+
+  redis:
+    host: 47.102.147.20
+    port: 6379
+    password: ubuntu
