@@ -11,8 +11,10 @@ import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,9 @@ public class UserDishController {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+
+
     @ApiOperation("根据分类id进行查询")
     @GetMapping("/list")
     public Result<List<DishVO>>list(Long categoryId) {
