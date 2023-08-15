@@ -73,7 +73,7 @@
         select * from dish where id = #{id};
     </select>
     <select id="selectByCategoryId" resultType="com.sky.entity.Dish">
-        select * from dish where category_id = #{categoryId};
+        select * from dish where category_id = #{categoryId} and status = 1;
     </select>
     <select id="selectDisabledDishId" resultType="java.lang.Long">
             select count(*) from dish where id in
@@ -81,5 +81,20 @@
                 #{id}
             </foreach>
             and status = 0
+    </select>
+    <select id="listWithFlavor" resultType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+            <if test="name != null">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        order by create_time desc
     </select>
 </mapper>

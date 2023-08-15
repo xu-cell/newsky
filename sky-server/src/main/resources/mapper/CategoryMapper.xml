@@ -48,4 +48,18 @@
         </where>
         order by sort, create_time desc
     </select>
+    <select id="userGetCategories" resultType="com.sky.entity.Category">
+        select * from category
+        <where>
+            <if test="name != null and name !=''">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="type != null">
+                and type=#{type}
+            </if>
+            and status = 1
+        </where>
+
+        order by sort
+    </select>
 </mapper>

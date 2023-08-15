@@ -7,6 +7,7 @@ import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
@@ -17,6 +18,8 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetMealService;
+import com.sky.vo.DishItemVO;
+import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -166,5 +169,52 @@ public class SetMealServiceImpl implements SetMealService {
         SetmealVO setmealVO = BeanUtil.copyProperties(setmeal,SetmealVO.class);
         setmealVO.setSetmealDishes(list);
         return setmealVO;
+    }
+
+    @Override
+    public List<Setmeal> userSelectById(Long categoryId) {
+
+        // 根据id查询套餐信息
+        List<Setmeal> setmeal = setmealMapper.userGetById(categoryId);
+        return setmeal;
+    }
+
+    /**
+     * 根据套餐id查询包含的菜品
+     * @param id
+     * @return
+     */
+    @Override
+    public List<DishItemVO> selectBySetMealId(Long id) {
+
+        // DishItemVO = 中间表信息 + dish表信息
+
+
+        List<Long> dishListIds = setmealDishMapper.selectDishId(id);
+        List<Dish> dishList = new ArrayList<>();
+        for (Long dishId : dishListIds) {
+            dishList.add(dishMapper.getInfoById(dishId));
+        }
+
+        List<DishItemVO> dishItemVOS = new ArrayList<DishItemVO>();
+        List<SetmealDish> setmealDishs = setmealDishMapper.selectDetailById(id);
+
+        for (Dish item : dishList) {
+
+            DishItemVO dishItemVO = BeanUtil.copyProperties(item,DishItemVO.class);
+            dishItemVOS.add(dishItemVO);
+        }
+
+        for (SetmealDish item : setmealDishs) {
+            String name = item.getName();
+            for (DishItemVO vo : dishItemVOS) {
+                if(vo.getName().equals(name)) {
+                    vo.setCopies(item.getCopies());
+                }
+            }
+        }
+
+
+        return dishItemVOS;
     }
 }

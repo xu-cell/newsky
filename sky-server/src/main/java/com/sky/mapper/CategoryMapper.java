@@ -23,4 +23,5 @@ public interface CategoryMapper {
 
     void delete(Long id);
 
+    List<Category> userGetCategories(String name, Integer type);
 }

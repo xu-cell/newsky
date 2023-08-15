@@ -65,4 +65,9 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getByType(Integer type) {
         return categoryMapper.getCategories(null,type);
     }
+
+    @Override
+    public List<Category> userGetByType(Integer type) {
+        return categoryMapper.userGetCategories(null,type);
+    }
 }

@@ -21,3 +21,8 @@ sky:
     host: 47.102.147.20
     port: 6379
     password: ubuntu
+
+
+  wechat:
+    appid: wx7d2015bae336b771
+    secret: 4d4cf69c2543d4881767c49f053aba80

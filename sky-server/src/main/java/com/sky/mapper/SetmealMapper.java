@@ -29,4 +29,6 @@ public interface SetmealMapper {
 
 
     Setmeal getById(Long id);
+
+    List<Setmeal> userGetById(Long categoryId);
 }

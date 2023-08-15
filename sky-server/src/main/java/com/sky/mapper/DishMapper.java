@@ -30,9 +30,11 @@ public interface DishMapper {
 
     Dish getInfoById(Long id);
 
-    List<Dish> selectByCategoryId(Integer categoryId);
+    List<Dish> selectByCategoryId(Long categoryId);
 
     Long selectDisabledDishId(List<Long> count);
+
+    List<Dish> listWithFlavor(Dish dish);
 }
 
 

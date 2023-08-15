@@ -18,4 +18,6 @@ public interface CategoryService {
     void delete(Long id);
 
     List<Category> getByType(Integer type);
+
+    List<Category> userGetByType(Integer type);
 }
