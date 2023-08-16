@@ -24,5 +24,9 @@ sky:
 
 
   wechat:
-    appid: wx7d2015bae336b771
-    secret: 4d4cf69c2543d4881767c49f053aba80
+    appid: wxffb3637a228223b8
+    secret: 84311df9199ecacdf4f12d27b6b9522d
+    mchid: 1614433647
+    mchSerialNo: Aa111111111122222222223333333333
+    notifyUrl:   http://1d685398.r12.vip.cpolar.cn/notyfy/paySuccess
+

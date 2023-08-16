@@ -13,6 +13,7 @@
         delete from shopping_cart where user_id = #{userId};
     </delete>
 
+
     <select id="list" resultType="com.sky.entity.ShoppingCart">
         select * from shopping_cart
         <where>

@@ -13,4 +13,7 @@ public interface UserMapper {
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertUser(User user);
+
+    User getUserById(Long userId);
+
 }
