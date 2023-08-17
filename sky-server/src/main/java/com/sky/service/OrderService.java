@@ -35,4 +35,6 @@ public interface OrderService {
     OrderVO getOrderDetails(Long id);
 
     void userCancelById(Long id) throws Exception;
+
+    void repetition(Long id);
 }

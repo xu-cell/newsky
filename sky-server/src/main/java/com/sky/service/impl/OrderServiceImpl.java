@@ -8,6 +8,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -15,6 +16,7 @@ import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.service.ShoppingCarService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
@@ -28,6 +30,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author xujj
@@ -36,6 +39,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
+
 
     @Autowired
     private OrderDetailMapper orderDetailMapper;
@@ -193,26 +197,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderVO getOrderDetails(Long id) {
+        // 根据id查询订单
+        Orders orders = orderMapper.getById(id);
 
-        OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
+        // 查询该订单对应的菜品/套餐明细
+        List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(orders.getId());
 
-        ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
+        // 将该订单及其详情封装到OrderVO并返回
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orders, orderVO);
+        orderVO.setOrderDetailList(orderDetailList);
 
-        Page<Orders> orders = orderMapper.list(ordersPageQueryDTO);
-        List<OrderVO> list = new ArrayList<OrderVO>();
-        if(orders!=null && orders.getTotal() > 0) {
-            for (Orders item : orders) {
-                if(item.getId().equals(id)) {
-                    Long orderId = item.getId();
-                    List<OrderDetail> ordersDetailList = orderDetailMapper.getByOrderId(orderId);
-                    OrderVO orderVO = new OrderVO();
-                    BeanUtils.copyProperties(item, orderVO);
-                    orderVO.setOrderDetailList(ordersDetailList);
-                    list.add(orderVO);
-                }
-            }
-        }
-        return list.get(0);
+        return orderVO;
+
     }
 
     @Override
@@ -251,5 +248,29 @@ public class OrderServiceImpl implements OrderService {
         orders.setCancelReason("用户取消");
         orders.setCancelTime(LocalDateTime.now());
         orderMapper.update(orders);
+    }
+
+    /**
+     * 再来一单
+     * @param id
+     */
+    @Override
+    public void repetition(Long id) {
+        Long userId = BaseContext.getCurrentId();
+        List<OrderDetail> list = orderDetailMapper.getByOrderId(id);
+
+        List<ShoppingCart> shoppingCartList = list.stream().map(x -> {
+            ShoppingCart shoppingCart = new ShoppingCart();
+
+            BeanUtils.copyProperties(x,shoppingCart);
+            shoppingCart.setUserId(userId);
+            shoppingCart.setCreateTime(LocalDateTime.now());
+            return shoppingCart;
+        }).collect(Collectors.toList());
+
+        // 将购物车对象批量添加到数据库
+        shoppingCartMapper.insertBatch(shoppingCartList);
+
+
     }
 }

@@ -109,7 +109,7 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
             int size =  shoppingCart.getNumber();
             size--;
             if(size == 0) {
-                shoppingCarMapper.delete(shoppingCart);
+                shoppingCarMapper.deleteById(shoppingCart.getId());
             } else {
                 shoppingCart.setNumber(size);
                 shoppingCarMapper.update(shoppingCart);

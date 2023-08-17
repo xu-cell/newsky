@@ -65,9 +65,9 @@ public class OrderController {
          return Result.success(pageResult);
     }
 
-    @GetMapping("/orderDetails/{id}")
+    @GetMapping("/orderDetail/{id}")
     @ApiOperation("查询订单详情")
-    public Result<OrderVO> getOrderDetails(@PathVariable Long id) {
+    public Result<OrderVO> getOrderDetails(@PathVariable("id") Long id) {
         OrderVO order = orderService.getOrderDetails(id);
         return Result.success(order);
     }
@@ -85,7 +85,30 @@ public class OrderController {
     }
 
 
+    /**
+     * 再来一单
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping("/repetition/{id}")
+    @ApiOperation("再来一单")
+    public Result repetition(@PathVariable Long id) {
+        orderService.repetition(id);
+        return Result.success();
+    }
 
+    /**
+     * 客户催单
+     * @param id
+     * @return
+     */
+    @GetMapping("/reminder/{id}")
+    @ApiOperation("客户催单")
+    public Result reminder(@PathVariable("id") Long id){
+//        orderService.reminder(id);
+        return Result.success();
+    }
 
 
 }
