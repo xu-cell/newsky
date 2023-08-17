@@ -33,4 +33,6 @@ public interface OrderService {
     PageResult list(int page, int pageSize, Integer status);
 
     OrderVO getOrderDetails(Long id);
+
+    void userCancelById(Long id) throws Exception;
 }
