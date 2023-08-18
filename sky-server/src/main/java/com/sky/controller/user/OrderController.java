@@ -1,6 +1,7 @@
 package com.sky.controller.user;
 
 
+import com.alibaba.fastjson.JSON;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.result.PageResult;
@@ -9,12 +10,16 @@ import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author xujj
@@ -26,13 +31,23 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private WebSocketServer webSocketServer;
     @PostMapping("/submit")
     @ApiOperation("用户下单")
     public Result<OrderSubmitVO> submit(@RequestBody OrdersSubmitDTO ordersSubmitDTO){
         log.info("用户下单，参数为：{}",ordersSubmitDTO);
         OrderSubmitVO orderSubmitVO = orderService.submitOrder(ordersSubmitDTO);
 
-
+//        // 测试来订单提醒
+//        //通过websocket向客户端浏览器推送消息 type orderId content
+//        Map map = new HashMap();
+//        map.put("type",1); // 1表示来单提醒 2表示客户催单
+//        map.put("orderId",orderSubmitVO.getId());
+//        map.put("content","订单号：" + "支付成功可以派送");
+//
+//        String json = JSON.toJSONString(map);
+//        webSocketServer.sendToAllClient(json);
 
         return Result.success(orderSubmitVO);
     }
