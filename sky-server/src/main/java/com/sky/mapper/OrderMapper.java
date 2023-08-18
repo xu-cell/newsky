@@ -31,4 +31,8 @@ public interface OrderMapper {
     Page<Orders> list(OrdersPageQueryDTO ordersPageQueryDTO);
 
     Orders getById(Long id);
+
+    Page<Orders> adminList(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    Integer listStatistics(Integer type);
 }

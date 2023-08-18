@@ -60,3 +60,7 @@ sky:
     mchSerialNo: ${sky.wechat.mchSerialNo}
 
 
+  shop:
+    address: 北京市海淀区上地十街10号
+  baidu:
+    ak: VTp7jY7RBX2T8zKx0I4VC7cQrycBPwGy
