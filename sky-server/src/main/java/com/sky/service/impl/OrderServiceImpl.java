@@ -18,11 +18,9 @@ import com.sky.service.OrderService;
 import com.sky.service.ShoppingCarService;
 import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
-import com.sky.vo.OrderPaymentVO;
-import com.sky.vo.OrderStatisticsVO;
-import com.sky.vo.OrderSubmitVO;
-import com.sky.vo.OrderVO;
+import com.sky.vo.*;
 import com.sky.websocket.WebSocketServer;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -487,6 +487,41 @@ public class OrderServiceImpl implements OrderService {
 
         String json = JSON.toJSONString(map);
         webSocketServer.sendToAllClient(json);
+    }
+
+    /**
+     * 使用这段时间内的营业额
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public TurnoverReportVO getTurnoverReport(LocalDate begin, LocalDate end) {
+        // 获取时间集合，之后还要将时间集合转化为string
+        List<LocalDate> dates = new ArrayList<>();
+        dates.add(begin);
+        while(!begin.equals(end)) {
+            begin = begin.plusDays(1);
+            dates.add(begin);
+        }
+
+        // 获取每日的销售额的集合，没有添加为0，之后将集合转化为String返回
+        List<Double> turnoverList = new ArrayList<>();
+        for (LocalDate date : dates) {
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+            Map map = new HashMap<>();
+            map.put("begin", beginTime);
+            map.put("end", endTime);
+            map.put("status", Orders.COMPLETED);
+            Double turnover = orderMapper.sumByMap(map);
+            turnover = turnover == null ? 0.0 : turnover;
+            turnoverList.add(turnover);
+        }
+
+
+        // 封装结构体，返回
+        return TurnoverReportVO.builder().dateList(StringUtils.join(dates,",")).turnoverList(StringUtils.join(turnoverList,",")).build();
     }
 
     /**
